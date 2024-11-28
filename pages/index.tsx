@@ -61,8 +61,17 @@ const HomePage = () => {
 
   useEffect(() => {
     if (page === 0) {
+      setTemplates([]);
+      setBlogs([]);
       setPage(1);
     } 
+
+    if (view === "blogs") {
+      fetchPosts();
+    } 
+    else if (view === "templates") {
+      fetchTemplates();
+    }
   }, [page, context?.userID]);
 
   useEffect(() => {

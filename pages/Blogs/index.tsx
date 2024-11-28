@@ -259,6 +259,7 @@ const BlogPostsList = () => {
 
         <button
           onClick={() => {
+            setOrder('');
             setSearchUser('');
             setSearchTitle('');
             setSearchDescription('');
@@ -266,7 +267,6 @@ const BlogPostsList = () => {
             setSearchTags([]);
             setTagInput('');
             setPlaceholder('Add tags (press Enter)');
-            setOrder('desc');
           }}
           className="px-6 py-2 rounded">
           Clear
