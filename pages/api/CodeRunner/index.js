@@ -23,16 +23,27 @@ export default function handler(req, res) {
   const args = `-e FILE_CONTENT="${parsed_code}" -e FILE_INPUT="${parsed_input}" -e FILE_NAME="${className}"`;
   const cmd = `docker run --rm ${args} ${language}runner`;
   const runner = spawn('bash',['-c', cmd], defaults);
-  if (runner.status === 124) {
-    return res.status(400).json({ output: "", error: 'Timeout Error' });
-  }
-    if (runner.status === null || runner.status == 137) {
-    return res.status(400).json({ output: "", error: 'Memory Limit/Stdout Buffer Exceeded' });
-    }
 
-  const output = runner.stdout ? runner.stdout.toString() : '';
-  const error = runner.stderr ? runner.stderr.toString() : '';
-  return res.status(200).json({ output, error });
+  let output = '';
+  let error = '';
+
+  runner.stdout.on('data', (data) => {
+    output += data.toString();
+  });
+
+  runner.stderr.on('data', (data) => {
+    error += data.toString();
+  });
+
+  runner.on('exit', (code) => {
+    if (code === 124) {
+      return res.status(400).json({ output: "", error: 'Timeout Error' });
+    }
+    if (code === 137) {
+      return res.status(400).json({ output: "", error: 'Memory Limit/Stdout Buffer Exceeded' });
+    }
+    return res.status(200).json({ output, error });
+  });
 }
   catch (error) {
     return res.status(500).json({ output: "", error: error.message });
