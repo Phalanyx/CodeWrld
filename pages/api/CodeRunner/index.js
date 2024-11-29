@@ -22,7 +22,7 @@ export default function handler(req, res) {
   let parsed_input = input.replace(/"/g, '\\"').replace(/\n/g, '\\n');
   const args = `-e FILE_CONTENT="${parsed_code}" -e FILE_INPUT="${parsed_input}" -e FILE_NAME="${className}"`;
   const cmd = `docker run --rm ${args} ${language}runner`;
-  const runner = spawnSync('bash',['-c', cmd], defaults);
+  const runner = spawn('bash',['-c', cmd], defaults);
   if (runner.status === 124) {
     return res.status(400).json({ output: "", error: 'Timeout Error' });
   }
