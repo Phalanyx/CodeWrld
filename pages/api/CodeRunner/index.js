@@ -1,4 +1,4 @@
-const { spawnSync } = require('child_process');
+const { spawn } = require('child_process');
 
 export default function handler(req, res) {
   
